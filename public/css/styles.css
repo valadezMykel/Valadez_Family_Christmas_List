@@ -3,6 +3,17 @@ h1{
     text-shadow: 3px 3px black;
 }
 
+.breakLine{
+    width: 1px;
+    height: 90%;
+    background-color: whitesmoke;
+    /* float: right; */
+    position: absolute;
+    top: 10%;
+    right: 0;
+    
+}
+
 .jumbotron{
     background-image: url("./jumbotron.jpg");
 }
@@ -16,5 +27,13 @@ h1{
 body{
     min-width: 100px;
     min-height: 100px;
-    background-color: chartreuse;
+    background-color: rgb(180, 68, 48);
+}
+
+#test{
+    padding: 20px;
+    font-size: x-large;
+    color: whitesmoke;
+    background-color: rgb(16, 65, 16, .9);
+    position: relative;
 }
