@@ -16,7 +16,8 @@ app.get("/", function(request, response){
 
 app.post("*", function(req, res){
     console.log("received");
-    res.send(true);
+    console.log(req.body);
+    res.send(req.body);
 })
 
 app.listen(PORT, function(){
