@@ -1,0 +1,20 @@
+h1{
+    color: whitesmoke;
+    text-shadow: 3px 3px black;
+}
+
+.jumbotron{
+    background-image: url("./jumbotron.jpg");
+}
+
+#titleForm{
+    color: whitesmoke;
+    padding: 30px;
+    background-color: rgb(16, 65, 16, .6);
+}
+
+body{
+    min-width: 100px;
+    min-height: 100px;
+    background-color: chartreuse;
+}

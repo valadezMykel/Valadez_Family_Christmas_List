@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valadez Family Christmas</title>
+    <link rel="stylesheet" href="/public/css/reset.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.1.3/flatly/bootstrap.min.css" />
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+    <div class="jumbotron">
+        <h1 class="display-4">Valadez/Higel Family</h1>
+        <h1 class="display-4">Christmas List</h1>
+        <hr class="my-4">
+        <div id="titleForm">
+            <p>What do you want for Christmas?</p>
+            <form action="server.js" method="post">
+                <label for="name">Your name</label><br>
+                <input type="text" id="name" placeholder="Constance Ivan"><br><br>
+                <label for="present">Something for your list</label><br>
+                <input type="text" id="present" placeholder="A poodle"><br><br>
+                <button type="submit" id="jumbotronBtn">submit</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="public/js/index.js"></script>
+</body>
+</html>

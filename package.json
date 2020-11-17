@@ -1,0 +1,28 @@
+{
+  "name": "valadez_family_christmas_list",
+  "version": "1.0.0",
+  "description": "An application for my family to hold everyone's Christmas list",
+  "main": "server.js",
+  "scripts": {
+    "test": "mon",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valadezMykel/Valadez_Family_Christmas_List.git"
+  },
+  "keywords": [
+    "CHristams"
+  ],
+  "author": "Mykel Valadez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valadezMykel/Valadez_Family_Christmas_List/issues"
+  },
+  "homepage": "https://github.com/valadezMykel/Valadez_Family_Christmas_List#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.6",
+    "uniqid": "^5.2.0"
+  }
+}
