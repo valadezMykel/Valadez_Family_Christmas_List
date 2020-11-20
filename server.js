@@ -3,7 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const uniqid = require("uniqid");
 const mysql = require("mysql");
-const { callbackify } = require("util");
 
 const app = express();
 const PORT = process.env.PORT || 4400;
@@ -16,7 +15,7 @@ const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "steph45$U",
+    password: "",
     database: "christmasList_DB"
 });
 
@@ -31,10 +30,10 @@ class Person{
     };
 };
 
-async function peoplePresentsObjCreator(resp){
+function peoplePresentsObjCreator(resp){
 
     let peopleAndPresents = [];
-    // return new Promise(()=>{
+
     connection.query("SELECT * FROM people", (err, peopleArr)=>{
         if(err) throw err;
 
@@ -67,7 +66,8 @@ app.get("/", function(request, response){
 });
 
 app.get("/api/wishlist", async (req, resp)=>{
-    peoplePresentsObjCreator(resp)
+    peoplePresentsObjCreator(resp);
+    
 });
 
 app.post("/api/wishlist", function(req, resp){
@@ -81,12 +81,10 @@ app.post("/api/wishlist", function(req, resp){
         // find an id by the name given
         connection.query("SELECT id FROM people WHERE name=?",[name], (err, resultsID)=>{
             if(err) throw err;
-            console.log(resultsID[0].id)
             // if the name isnt there yet add it then retry
             if(resultsID.length === 0){
                 connection.query("INSERT INTO people(name) VALUES (?)", [name], (err, results)=>{
                     if(err) throw err;
-                    console.log("New name added")
                     nameHandler();
                 });
             };
@@ -94,10 +92,8 @@ app.post("/api/wishlist", function(req, resp){
             // add the present with the people id as a forgien key
             connection.query("INSERT INTO presents(present, peopleID) VALUES (?,?)", [present, resultsID[0].id], (err)=>{
                 if(err) throw err;
-                console.log("adding new present");
                 resp.status(200).end();
             });
-
 
         });
     };

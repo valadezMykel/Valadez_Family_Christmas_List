@@ -19,7 +19,27 @@ jumboBtn.on('click', function(ev){
 function getPeopleAndLists(){
     $.get("/api/wishlist", function (data){
         console.log(data);
+        for(let i = 0; i < data.length; i++){
+
+            generateBoxes(data[i]);
+        }
     })
+}
+
+function generateBoxes(obj){
+    let container = $("<div>").addClass("container");
+        let row = $("<div>").addClass("row");
+            let col1 = $("<div>").addClass("col-sm-3");
+                let name = $("<p>").text(`${obj.name} is wishing for...`);
+                let breakLine = $("<div>").addClass("breakLine");
+            let col2 = $("<div>").addClass("col-sm");
+                let presentList = $("<ul>");
+    
+    for(let j = 0; j < obj.presentArr.length; j++){
+        let presentLi = $("<li>").text(obj.presentArr[j]);
+        
+    }
+
 }
 
 getPeopleAndLists();
