@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const uniqid = require("uniqid");
 const mysql = require("mysql");
+const { callbackify } = require("util");
 
 const app = express();
 const PORT = process.env.PORT || 4400;
@@ -23,56 +24,85 @@ connection.connect((err)=>{
     if(err) throw err;
 })
 
-// const renderHTML = () =>{
-//     var peopleAndPresents = [];
-//     connection.query("SELECT * FROM people", (err, peopleArr)=>{
-//         if(err) throw err;
-//         console.log(peopleArr);
-//         for(let i = 0; i < peopleArr.length; i++){
-            
-//         }
-//     })
-// };
+class Person{
+    constructor(name, presentsArr){
+        this.name = name;
+        this.presentsArr = presentsArr;
+    };
+};
 
-// renderHTML();
+async function peoplePresentsObjCreator(resp){
+
+    let peopleAndPresents = [];
+    // return new Promise(()=>{
+    connection.query("SELECT * FROM people", (err, peopleArr)=>{
+        if(err) throw err;
+
+        for(let i = 0; i < peopleArr.length; i++){
+        
+            connection.query("SELECT present FROM presents WHERE peopleID=?", [peopleArr[i].id], (err, presentsObjArr)=>{
+                if(err) throw err;
+                
+                let presentsArr = [];
+                presentsObjArr.forEach(el => {
+                    presentsArr.push(el.present)
+                });
+    
+                const personObj = new Person(peopleArr[i].name, presentsArr);
+    
+                peopleAndPresents.push(personObj);
+
+                if(i+1 === peopleArr.length){
+                    console.log(peopleAndPresents);
+                    resp.json(peopleAndPresents);
+                }
+            });
+        };
+    });
+};
 
 
 app.get("/", function(request, response){
-    // renderHTML();
     response.sendFile(path.join(__dirname, "./html/index.html"));
 });
 
-app.post("/api/wishList", function(req, res){
+app.get("/api/wishlist", async (req, resp)=>{
+    peoplePresentsObjCreator(resp)
+});
+
+app.post("/api/wishlist", function(req, resp){
     const name = req.body.name;
     const present = req.body.present;
 
-    console.log(name + " " + present);
-
     
-    const nameHandler = function(){
-    // find an id by the name given
-    connection.query("SELECT id FROM people WHERE name=?",[name], (err, resultsID)=>{
-        if(err) throw err;
-        
-        // if the name isnt there yet add it then retry
-        if(resultsID.length === 0){
-            connection.query("INSERT INTO people(name) VALUES (?)", [name], (err, results)=>{
-                if(err) throw err;
-                console.log("New name added")
-                nameHandler();
-            });
-        };
-        
-        // add the present with the people id as a forgien key
-        connection.query("INSERT INTO presents(present, peopleID) VALUES (?,?)", [present, resultsID], (err)=>{
+    
+    const nameHandler = function(resp){
+        console.log(name + " " + present);
+        // find an id by the name given
+        connection.query("SELECT id FROM people WHERE name=?",[name], (err, resultsID)=>{
             if(err) throw err;
+            console.log(resultsID[0].id)
+            // if the name isnt there yet add it then retry
+            if(resultsID.length === 0){
+                connection.query("INSERT INTO people(name) VALUES (?)", [name], (err, results)=>{
+                    if(err) throw err;
+                    console.log("New name added")
+                    nameHandler();
+                });
+            };
+            
+            // add the present with the people id as a forgien key
+            connection.query("INSERT INTO presents(present, peopleID) VALUES (?,?)", [present, resultsID[0].id], (err)=>{
+                if(err) throw err;
+                console.log("adding new present");
+                resp.status(200).end();
+            });
+
+
         });
+    };
 
-
-    })};
-
-    // renderHTML()
-    res.send(path.join(__dirname, "./html/index.html"));
+    nameHandler(resp);
 });
 
 app.delete("api/delete/person:id", (req, res) =>{
