@@ -61,14 +61,14 @@ function peoplePresentsObjCreator(resp){
     });
 };
 
+app.get("/wishlist", async (req, resp)=>{
+    console.log("resquest made");
+    peoplePresentsObjCreator(resp);
+    
+});
 
 app.get("*", function(request, response){
     response.sendFile(path.join(__dirname, "./html/index.html"));
-});
-
-app.get("/wishlist", async (req, resp)=>{
-    peoplePresentsObjCreator(resp);
-    
 });
 
 app.post("/wishlist", function(req, resp){
