@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const connection = mysql.createConnection({
     host: process.env.dbHost,
-    port: process.env.dbPort,
+    port: 3306,
     user: process.env.dbUser,
     password: process.env.dbPass,
     database: "christmasList_DB"
