@@ -4,8 +4,8 @@
   "description": "An application for my family to hold everyone's Christmas list",
   "main": "server.js",
   "scripts": {
-    "test": "mon",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mon"
   },
   "repository": {
     "type": "git",
