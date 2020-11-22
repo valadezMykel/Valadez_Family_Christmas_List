@@ -12,16 +12,22 @@ app.use("/public", express.static("./public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const connection = mysql.createConnection({
+const dbConfig = {
     host: "us-cdbr-east-02.cleardb.com",
     port: 3306,
     user: "b53c2972471a81",
     password: "b7270b53",
     database: "heroku_1134845f6828d85"
-});
+}
+
+const connection = mysql.createConnection(dbConfig);
 
 connection.connect((err)=>{
-    if(err) throw err;
+    if(err) {
+        console.log(err.code);
+        console.log(err.fatal);
+        connection = mysql.createConnection(dbConfig);
+    };
 })
 
 class Person{
