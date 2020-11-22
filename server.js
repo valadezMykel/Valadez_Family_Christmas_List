@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
@@ -12,10 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const connection = mysql.createConnection({
-    host: "localhost",
+    host: process.env.dbHost,
     port: 3306,
-    user: "root",
-    password: "",
+    user: process.env.dbUser,
+    password: process.env.dbPass,
     database: "christmasList_DB"
 });
 
@@ -65,14 +66,15 @@ app.get("/", function(request, response){
     response.sendFile(path.join(__dirname, "./html/index.html"));
 });
 
-app.get("/api/wishlist", async (req, resp)=>{
+app.get("/wishlist", async (req, resp)=>{
     peoplePresentsObjCreator(resp);
     
 });
 
-app.post("/api/wishlist", function(req, resp){
+app.post("/wishlist", function(req, resp){
     const name = req.body.name;
     const present = req.body.present;
+    console.log("starting")
 
     
     
@@ -81,19 +83,22 @@ app.post("/api/wishlist", function(req, resp){
         // find an id by the name given
         connection.query("SELECT id FROM people WHERE name=?",[name], (err, resultsID)=>{
             if(err) throw err;
+            console.log(resultsID);
+            // console.log(resultsID[0].id);
             // if the name isnt there yet add it then retry
             if(resultsID.length === 0){
                 connection.query("INSERT INTO people(name) VALUES (?)", [name], (err, results)=>{
                     if(err) throw err;
-                    nameHandler();
+                    console.log("new name added");
+                    nameHandler(resp);
+                });
+            }else{
+                // add the present with the people id as a forgien key
+                connection.query("INSERT INTO presents(present, peopleID) VALUES (?,?)", [present, resultsID[0].id], (err)=>{
+                    if(err) throw err;
+                    resp.status(200).end();
                 });
             };
-            
-            // add the present with the people id as a forgien key
-            connection.query("INSERT INTO presents(present, peopleID) VALUES (?,?)", [present, resultsID[0].id], (err)=>{
-                if(err) throw err;
-                resp.status(200).end();
-            });
 
         });
     };
