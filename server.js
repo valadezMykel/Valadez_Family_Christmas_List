@@ -62,7 +62,7 @@ function peoplePresentsObjCreator(resp){
 };
 
 
-app.get("/", function(request, response){
+app.get("*", function(request, response){
     response.sendFile(path.join(__dirname, "./html/index.html"));
 });
 
