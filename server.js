@@ -20,16 +20,40 @@ const dbConfig = {
     database: "heroku_1134845f6828d85"
 }
 
-const connection = mysql.createConnection(dbConfig);
+let connection;
+
+const handleDisconnect = ()=> {
+    connection = mysql.createConnection(dbConfig);
+
+    connection.on("error", (err) =>{
+        console.log("error in db connection 2", err);
+        if(err.code === "PROTOCOL_CONNECTION_LOST"){
+            handleDisconnect()
+        }else{
+            throw err;
+        }
+    })
+};
+
+handleDisconnect();
 
 connection.connect((err)=>{
     if(err) {
         console.log("error in db connection")
         console.log(err.code);
         console.log(err.fatal);
-        connection = mysql.createConnection(dbConfig);
+        setTimeout(handleDisconnect, 2000);
     };
-})
+});
+
+// connection.on("error", (err) =>{
+//     console.log("error in db connection 2", err);
+//     if(err.code === "PROTOCOL_CONNECTION_LOST"){
+//         handleDisconnect()
+//     }else{
+//         throw err;
+//     }
+// })
 
 class Person{
     constructor(name, presentsArr){
