@@ -13,10 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const dbConfig = {
-    host: "us-cdbr-east-02.cleardb.com",
+    host: process.env.dbHost,
     port: 3306,
-    user: "b53c2972471a81",
-    password: "b7270b53",
+    user: process.env.dbUser,
+    password: process.env.dbPass,
     database: "heroku_1134845f6828d85"
 }
 
@@ -24,6 +24,7 @@ const connection = mysql.createConnection(dbConfig);
 
 connection.connect((err)=>{
     if(err) {
+        console.log("error in db connection")
         console.log(err.code);
         console.log(err.fatal);
         connection = mysql.createConnection(dbConfig);
